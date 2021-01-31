@@ -11,7 +11,6 @@ const SignUp = (props)=>{
         const unsubscribe = fb.auth().onAuthStateChanged(user=>{
             if(user){
                 props.dispatch(setUser(user));
-
             }
             else
                 props.dispatch(clearUser())
@@ -22,6 +21,18 @@ const SignUp = (props)=>{
 function handleSignUp(e){
     e.preventDefault();
     fb.auth().createUserWithEmailAndPassword(email,pass)
+        .then(user=>{
+            console.log(user.user.email)
+            fetch('/api/createuser',{
+                method : 'POST',
+                headers: new Headers({
+                    'Accept' : 'application/json' ,
+                    'Content-Type': 'application/json'
+                }),
+                body : JSON.stringify({email :user.user.email})
+            })
+        })
+        .catch(err=>console.log(err))
 
     
 }
