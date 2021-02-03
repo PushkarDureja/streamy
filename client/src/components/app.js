@@ -1,13 +1,30 @@
-import React from "react";
+import React,{useEffect} from "react";
 import {BrowserRouter,Route} from 'react-router-dom'
+import {connect} from 'react-redux'
 
 import Navbar from './navbar'
 import Home from './Home'
 import Login from './login'
 import CreateStream from './createStream'
 import SignUp from './signup'
+import fb from '../config/firebase'
+import {setUser,clearUser} from '../actions/auth'
 
-const App = ()=>{
+
+const App = ({dispatch})=>{
+
+    useEffect(()=>{
+        const unsubscribe = fb.auth().onAuthStateChanged(user=>{
+            if(user){
+                dispatch(setUser(user));
+
+            }
+            else
+                dispatch(clearUser())
+        })
+        return ()=>unsubscribe()
+    },[])
+
     return(
         <div>
             
@@ -22,4 +39,11 @@ const App = ()=>{
         </div>
     )
 }
-export default App
+
+const mapStateToProps = (state)=>{
+    return {
+        user : state.user
+    }
+}
+
+export default connect(mapStateToProps)(App)

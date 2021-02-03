@@ -1,6 +1,6 @@
 const router = require('express').Router();
-const UserSchema = require('../models/stream')
-const {nanoid} = require('nanoid')
+const UserSchema = require('../models/user')
+const streamSchema  = require('../models/stream')
 
 
 router.get('/user',(req,res)=>{
@@ -25,41 +25,29 @@ router.post('/createuser',(req,res)=>{
 })
 
 
-router.put('/createstream/:id',(req,res)=>{
-    const {title,description} = req.body
+router.post('/createstream/:id',(req,res)=>{
+    const {title,description,key} = req.body
     const streamObj = {
-        key : nanoid(),
+        email : req.params.id,
+        key : key,
         title : title,
         description : description
     }
-    UserSchema.findOneAndUpdate({email:req.params.id},{
-        $push : {
-            Streams : streamObj
-        }
-    })
+
+    streamSchema.create(streamObj)
         .then(done=>{
-            if(done){
-                console.log("success");
-                res.sendStatus(200);
-            }
-            else {
-                console.log("email not found in db");
-                res.sendStatus(404)
-            }
-    })
+            res.sendStatus(200);
+        })
         .catch(err=>{
             console.log(err);
-            res.sendStatus(500)
+            res.sendStatus(500);
         })
+
 })
-
-
 router.get('/streams',(req,res)=>{
-    UserSchema.find().
+    streamSchema.find().
         then(data=>{
-            
-            const finalData = data.filter(stream=>stream.Streams.length!=0)
-            res.status(200).json(finalData)
+            res.status(200).json(data)
         })
         .catch(err=>{
             console.log(err);

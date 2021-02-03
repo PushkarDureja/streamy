@@ -1,7 +1,10 @@
 const   express = require('express'),
         app = express(),
         mongoose  = require('mongoose'),
-        router  = require('./routes/user');
+        router  = require('./routes/user'),
+        request = require('request'),
+        path = require("path"),
+        job     = require('./helper/cron')
 
 
 app.use(express.json());
@@ -36,6 +39,6 @@ dbconnect
 
 
 app.use('/api',router);
-
-
+app.use('/images',express.static(path.join('./thumbnails')))
+job.start()
 app.listen(8000,()=>console.log("server started"))
