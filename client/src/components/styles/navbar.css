@@ -1,0 +1,25 @@
+.navbar .dropdown-item .material-icons {
+	font-size: 21px;
+	line-height: 16px;
+	vertical-align: middle;
+	margin-top: -2px;
+}
+
+ [data-letters]::before{
+  content:attr(data-letters);
+  display:inline-block;
+  font-size:1em;
+  width:2em;
+  font-weight: bolder;
+  height:2em;
+  line-height:2em;
+  text-align:center;
+  border-radius:50%;
+  background:rgb(255, 255, 255);
+  vertical-align:middle;
+  margin-right:1em;
+  color:rgb(25, 17, 17);
+  }
+  .dropdown-toggle::after { 
+    content: none; 
+}

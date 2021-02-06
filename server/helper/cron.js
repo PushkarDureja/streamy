@@ -5,6 +5,8 @@ const CronJob = require('cron').CronJob,
 const job = new CronJob('*/5 * * * * *', function () {
     request
         .get('http://35.247.156.160:8000/api/streams', function (error, response, body) {
+            if(!error){
+              
             let streams = JSON.parse(body);
             if (typeof (streams['live'] !== undefined)) {
                 let live_streams = streams['live'];
@@ -13,6 +15,7 @@ const job = new CronJob('*/5 * * * * *', function () {
                     generateStreamThumbnail(stream);
                 }
             }
+        }
         });
 }, null, true);
 

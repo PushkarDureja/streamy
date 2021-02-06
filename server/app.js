@@ -1,10 +1,13 @@
 const   express = require('express'),
         app = express(),
         mongoose  = require('mongoose'),
-        router  = require('./routes/user'),
+        userRouter  = require('./routes/user'),
+        streamRouter = require('./routes/stream'),
+        authRouter = require('./routes/auth')
         request = require('request'),
         path = require("path"),
-        job     = require('./helper/cron')
+        job     = require('./helper/cron');
+    require('dotenv').config()
 
 
 app.use(express.json());
@@ -37,8 +40,13 @@ dbconnect
     .then(()=>console.log("mongo initialised"))
     .catch((err)=>console.log(err))
 
+    app.use('/images',express.static(path.join('./thumbnails')))
 
-app.use('/api',router);
-app.use('/images',express.static(path.join('./thumbnails')))
+
+app.use('/api/user',userRouter);
+app.use('/api/stream',streamRouter);
+app.use('/api/auth',authRouter)
+
 job.start()
+
 app.listen(8000,()=>console.log("server started"))

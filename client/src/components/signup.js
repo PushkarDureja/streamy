@@ -1,58 +1,69 @@
-import React, {useState,useEffect} from 'react'
-import fb from '../config/firebase'
+import React, {useState} from 'react'
 import {connect} from 'react-redux'
-import {setUser,clearUser} from '../actions/auth'
+import {signup} from '../actions/auth'
+import fb from '../config/firebase'
+import {Link} from 'react-router-dom'
 
-const SignUp = (props)=>{
+const SignUp = ({auth})=>{
     const [email,setEmail] = useState('');
     const [pass,setPass] = useState('');
 
-    useEffect(()=>{
-        const unsubscribe = fb.auth().onAuthStateChanged(user=>{
-            if(user){
-                props.dispatch(setUser(user));
-            }
-            else
-                props.dispatch(clearUser())
-        })
-        return ()=>unsubscribe()
-    },[])
 
 function handleSignUp(e){
     e.preventDefault();
     fb.auth().createUserWithEmailAndPassword(email,pass)
         .then(user=>{
-            console.log(user.user.email)
-            fetch('/api/createuser',{
-                method : 'POST',
-                headers: new Headers({
-                    'Accept' : 'application/json' ,
-                    'Content-Type': 'application/json'
-                }),
-                body : JSON.stringify({email :user.user.email})
-            })
+            auth(user);
         })
-        .catch(err=>console.log(err))
-
+        .catch(err=>{
+            console.log(err);
+        })
     
 }
 
     return(
-        <form style = {{maxWidth:'30vw',margin:'2% auto', padding:'2%',minWidth:'200px'}}>
-            <div className="mb-3">
-                <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
-                <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value = {email}  onChange = {(e)=>setEmail(e.target.value)}/>
-            </div>
-            <div className="mb-3">
-                <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
-                <input type="password" className="form-control" id="exampleInputPassword1" value = {pass} onChange = {(e)=>setPass(e.target.value)}/>
-            </div>
-            <div className="mb-3 form-check">
-                <input type="checkbox" className="form-check-input" id="exampleCheck1"/>
-                <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
-            </div>
-            <button className="btn btn-primary" onClick = {handleSignUp}>Submit</button>
-    </form>
+    <div className="container outerbox">
+      <div className="text-center">
+        <h3>SignUp to Streamy</h3>
+      </div>
+      <form id="1" onSubmit={handleSignUp} className="form-box">
+        <div className="mb-3">
+          <label className="form-label">Email address</label>
+          <input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            type="email"
+            className="input-background form-control"
+            placeholder="Enter email"
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <label for="exampleInputPassword1" className="form-label">
+            Password
+          </label>
+          <input
+            value={pass}
+            onChange={(e) => setPass(e.target.value)}
+            type="password"
+            className="form-control input-background"
+            placeholder="Enter password"
+            required
+          />
+        </div>
+
+        <button
+          type="submit"
+          className="btn btn-dark submit-btn"
+          form="1"
+        >
+          SignUp
+        </button>
+      </form>
+      <p className="asker-div">
+        Already on Streamy? <Link to="/login">Login</Link>
+      </p>
+    </div>
     )
 
    
@@ -63,4 +74,6 @@ const mapStateToProps = (state)=>{
         user : state.user
     }
 }
-export default connect(mapStateToProps)(SignUp)
+export default connect(mapStateToProps,{
+    auth : signup
+})(SignUp)

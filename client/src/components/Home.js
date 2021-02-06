@@ -8,13 +8,25 @@ const Home = ()=>{
 const [live_streams,setStreams] = useState([]);
 
 useEffect (()=>{
-    fetch('/api/streams')
+    fetch("http://35.247.156.160:8000/api/streams")
+        .then(data=>data.json())
+        .then(res=>{
+            let streams = res;
+                if (streams['live'] !== undefined) {
+                    getStreamsInfo(streams['live']);
+                }
+        })
+        .catch(err=>console.log(err))
+},[])
+
+function getStreamsInfo(streams) {
+    const list = JSON.stringify(streams);
+    fetch(`/api/stream/getstreams?list=${list}`)
         .then(data=>data.json())
         .then(res=>{
             setStreams(res)
         })
-        .catch(err=>console.log(err))
-},[])
+}
 
 
     let streams = live_streams.map((stream, index) => {
@@ -24,11 +36,9 @@ useEffect (()=>{
                 <Link to={'/stream/' + stream.key}>
                     <div className="stream-thumbnail">
                         <img src={'http://localhost:8000/images/' + stream.key + '.png'}/>
-                        <span className="username">
-                    <Link to={'/stream/' + stream.key}>
-                        {stream.email}
-                    </Link>
-                </span>
+                        <span className="username" style = {{color : 'white'}}>                   
+                            {stream.email}
+                        </span>
                     </div>
                 </Link>
 
@@ -36,7 +46,6 @@ useEffect (()=>{
             </div>
         );
     });
-    console.log(streams)
     return (
         <div className="container mt-5">
             <h4>Live Streams</h4>

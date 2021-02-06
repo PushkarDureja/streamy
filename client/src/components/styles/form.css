@@ -1,0 +1,30 @@
+.text-center {
+    text-align: center;
+    padding: 10px 10px;
+  }
+  .outerbox {
+    max-width: 500px;
+    justify-content: center;
+    margin-top: 5vh;
+    padding: 20px 20px;
+  }
+  .form-box {
+    border: 1px solid #eaecef !important;
+    border-radius: 5px;
+    padding: 20px;
+    font-size: 14px;
+    background-color: #f0f6fc;
+    border: 1px solid;
+    list-style: none;
+  }
+  .asker-div {
+    padding: 15px 20px;
+    text-align: center;
+    border: 1px solid #eaecef;
+    border-radius: 5px;
+  }
+  
+  .submit-btn {
+    width: 100%;
+    text-align: center;
+  }

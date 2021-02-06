@@ -7,23 +7,11 @@ import Home from './Home'
 import Login from './login'
 import CreateStream from './createStream'
 import SignUp from './signup'
-import fb from '../config/firebase'
-import {setUser,clearUser} from '../actions/auth'
+import MyStream from "./mystreams";
+import ProtectedRoute from './protectedroute'
 
 
-const App = ({dispatch})=>{
-
-    useEffect(()=>{
-        const unsubscribe = fb.auth().onAuthStateChanged(user=>{
-            if(user){
-                dispatch(setUser(user));
-
-            }
-            else
-                dispatch(clearUser())
-        })
-        return ()=>unsubscribe()
-    },[])
+const App = ()=>{
 
     return(
         <div>
@@ -32,8 +20,9 @@ const App = ({dispatch})=>{
                 <Navbar/>
                 <Route path = '/' exact component = {Home}/>
                 <Route path = '/login' exact component = {Login}/>
-                <Route path = '/live' exact component = {CreateStream}/>
+                <ProtectedRoute path = '/live' exact component = {CreateStream}/>
                 <Route path = '/signup' exact component = {SignUp}/>
+                <ProtectedRoute path = '/mystream' exact component = {MyStream}/>
             </BrowserRouter>
 
         </div>

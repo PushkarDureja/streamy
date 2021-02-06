@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const UserSchema = require('../models/user')
-const streamSchema  = require('../models/stream')
-
+const jwt = require('jsonwebtoken')
 
 router.get('/user',(req,res)=>{
     UserSchema.find({})
@@ -13,46 +12,22 @@ router.get('/user',(req,res)=>{
         })
 })
 router.post('/createuser',(req,res)=>{
-    UserSchema.create(req.body)
+    UserSchema.create({email : req.body.email})
     .then(()=>{
-        console.log("saved")
-        res.sendStatus(200)
+        console.log("saved");
+        const token = jwt.sign({
+            user : req.body
+         },process.env.KEY)
+    
+         res.status(200).json({token})
     }
-    )
+        )
     .catch((err)=>{console.log(err)
         res.sendStatus(404)
     })
 })
 
 
-router.post('/createstream/:id',(req,res)=>{
-    const {title,description,key} = req.body
-    const streamObj = {
-        email : req.params.id,
-        key : key,
-        title : title,
-        description : description
-    }
 
-    streamSchema.create(streamObj)
-        .then(done=>{
-            res.sendStatus(200);
-        })
-        .catch(err=>{
-            console.log(err);
-            res.sendStatus(500);
-        })
-
-})
-router.get('/streams',(req,res)=>{
-    streamSchema.find().
-        then(data=>{
-            res.status(200).json(data)
-        })
-        .catch(err=>{
-            console.log(err);
-            res.sendStatus(500)
-        })
-})
 
 module.exports = router
