@@ -5,7 +5,7 @@ import {logout} from '../actions/auth'
 import './styles/navbar.css'
 
 const Navbar = (props)=>{
-
+  // console.log(props)
     function handleLogout(e){
         e.preventDefault()
         props.logout();
@@ -23,7 +23,7 @@ return(
             <Link class="dropdown-toggle avatar"  data-letters={
                   props.user !== null
                     ? props.user.email[0].toUpperCase()
-                    : "|"
+                    : "☰"
                 } data-bs-toggle="dropdown" aria-expanded="false">
 
             </Link>
@@ -78,7 +78,7 @@ return(
 }
 const mapStateToProps = (state)=>{
     return {
-        user:state.user
+        user:state.user.user
     }
 }
 export default connect(mapStateToProps,{

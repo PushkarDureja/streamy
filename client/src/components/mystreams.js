@@ -2,19 +2,20 @@ import React ,{useEffect,useState} from 'react';
 import {connect} from 'react-redux';
 import swal from 'sweetalert'
 import setHeaders from '../utils/setheader';
-
+import {timeDifference} from '../utils/timestamp'
 import EditModal from './editstream'
+import {ShowAndHide} from '../utils/conditionalshow'
 
 
 const MyStream = (props)=>{
-
+    // console.log(props.stream)
     const [myStreams,setStreams] = useState([]);
     const [modalState,setModalState] = useState(false);
     const [currStream,setCurrStream] = useState({});
 
 
     useEffect(()=>{
-        console.log(props);
+        // console.log(props);
         fetch(`/api/stream/getstreams/${props.user.email}`,{
             headers : new Headers({
                 'Accept' : 'application/json' ,
@@ -23,10 +24,20 @@ const MyStream = (props)=>{
         })
             .then(res=>res.json())
             .then(data=>{
-                setStreams(data)
+                let finalStreams = [];
+               data.map(st=>{
+                    const s = props.stream.find(ps=>ps.key === st.key)
+                    // console.log(s)
+                    if(s!==undefined){
+                        finalStreams = [...finalStreams,{...st,live : true}]
+                    }
+                    else 
+                        finalStreams = [...finalStreams,{...st,live : false}]
+                })
+                setStreams(finalStreams)
             })
         
-    },[])
+    },[props.stream])
 
      function deleteStream(key){
         swal({
@@ -105,24 +116,58 @@ const MyStream = (props)=>{
     }
 
     const streams = myStreams.map((st,index)=>{
+        
         return (
 
         
         <div className="list-group-item list-group-item-action flex-column align-items-start " onClick = {(e)=>{
             swal('Stream Key',st.key)
-        }}>
+            
+        }} style = {{cursor : "pointer"}}  >
             <div className = 'd-flex'>
                 <div className = 'd-flex align-items-center'>
-                <img src = {'http://localhost:8000/images/6TZZj5UDW1cShhUnrJ71b.png'} style = {{width:'10vw',height:'10vh',margin:'10px'}}></img>
+                <img src = {'http://localhost:8000/images/' + st.key + '.png'} style = {{width:'10vw',height:'15vh',margin:'10px'}}
+                    onError = {(e)=>{
+                        e.target.onerror = null;
+                        e.target.src = "/no_image.png"
+                    }}
+                    className="d-none d-md-block d-lg-block d-xl-block"
+                ></img>
                 </div>
                 <div style = {{width:'100%',padding:'10px'}}>
                         <div className="d-flex w-100 justify-content-between">
-                        <h5 className="mb-1">{st.title}</h5>
-                        <small>3 days ago</small>
+                        <div className="mb-1 fs-2" style = {{maxWidth : '30vw',wordWrap:'break-word'}}>{st.title}</div>
+                        <small>Created {timeDifference(new Date().getTime(),new Date(st.date).getTime())}</small>
                         </div>
-                        <p className="mb-1" style = {{textAlign:'justify'}} >{st.description}</p>
+                        <p className="mb-1" style={{ textAlign: "justify" }}>
+                            {st.description.length > 160 ? (
+                                <p>
+                                {st.description.substring(0, 160)}
+                                <span style={{ display: "none" }} id={`${index}more`}>
+                                    {st.description.substring(160)}
+                                </span>{" "}    
+                                    <span
+                                    onClick={(e) => ShowAndHide(e, index)}
+                                    style={{
+                                        cursor: "pointer",
+                                        borderBottom: "1px solid black",
+                                    }}
+                                    >
+                                    <b>more/less</b>
+                                    </span>
+                                </p>
+                            ) : (
+                                st.description
+                            )}
+                            </p>
                         <div className = "d-flex w-100 justify-content-between">
-                        <small>Not Live</small>    
+                        {st.live ? (
+                        <small style = {{backgroundColor: "red",color: "white",padding: "1px 5px",height : '20px'}}>LIVE</small>)
+                        :
+                        (
+                            <small>Not Live</small>
+                        )
+                    }  
                         <div>
                             <button className  = 'btn btn-dark' onClick = {(e)=>{
                                 e.stopPropagation();
@@ -154,7 +199,8 @@ const MyStream = (props)=>{
 }
 const mapStateToProps = (state) =>{
     return  {
-        user : state.user
+        user : state.user.user,
+        stream  : state.stream.stream
     }
 }
 

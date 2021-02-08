@@ -7,6 +7,7 @@ const ProtectedRoute = ({
     user,
     ...rest
         }) => {
+            console.log(user)
             return (
             <Route
                 {...rest}
@@ -25,7 +26,7 @@ const ProtectedRoute = ({
 
 const mapStateToProps = (state)=>{
     return {
-        user : state.user
+        user : state.user.user
     }
 }
 

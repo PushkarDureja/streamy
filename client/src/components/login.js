@@ -3,6 +3,9 @@ import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
 import {login} from '../actions/auth'
 import './styles/form.css'
+import {addFlashMessage} from '../actions/flash'
+import fb from '../config/firebase'
+
 
 const Login = (props)=>{
 
@@ -16,8 +19,23 @@ const Login = (props)=>{
     
 
     function handleLogin(e){
-        e.preventDefault();
-        props.auth(email,pass)
+      e.preventDefault();
+      fb.auth()
+        .signInWithEmailAndPassword(email, pass)
+        .then((user) => {
+          props.addFlashMessage({
+            type: "success",
+            text: "Logged in successfully",
+          });
+          props.auth(user,email, pass);
+        })
+        .catch((err) => {
+          props.addFlashMessage({
+            type: "error",
+            text: `${err.message}`,
+          });
+          console.log(err);
+        });
     }
 
 
@@ -70,9 +88,10 @@ const Login = (props)=>{
 
 const mapStateToProps = (state)=>{
     return {
-        user : state.user
+        user : state.user.user
     }
 }
 export default connect(mapStateToProps,{
-    auth : login
+    auth : login,
+    addFlashMessage : addFlashMessage
 })(Login)

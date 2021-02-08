@@ -1,16 +1,18 @@
 const router = require('express').Router();
 const streamSchema  = require('../models/stream')
-const authenticate = require('../middleware/authtoken')
+const authenticate = require('../middleware/authtoken');
+const { createConnection } = require('mongoose');
 
 
 
 router.post('/createstream/:id',authenticate,(req,res)=>{
-    const {title,description,key} = req.body
+    const {title,description,key,date} = req.body
     const streamObj = {
         email : req.params.id,
         key : key,
         title : title,
-        description : description
+        description : description,
+        date : date
     }
 
     streamSchema.create(streamObj)
@@ -26,11 +28,14 @@ router.post('/createstream/:id',authenticate,(req,res)=>{
 router.get('/getstreams/:user?',(req,res)=>{
     if(req.query.list){
         const data = JSON.parse(req.query.list);
-        let finalStreams  = []
         streamSchema.find()
             .then(streams=>{
-                finalStreams = streams.filter((s=>data[`${s.key}`]!==undefined))
-                 res.status(200).json(finalStreams)
+               let finalStreams = streams.filter((s=>data[`${s.key}`]!==undefined))
+               let newStream = [];
+               finalStreams.forEach(st=>{
+                   newStream = [...newStream,{...st._doc,started : data[st.key]['publisher']['connectCreated']}]
+               })
+                 res.status(200).json(newStream)
             })
             .catch(err=>{
                 console.log(err);

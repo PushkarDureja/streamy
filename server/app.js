@@ -7,7 +7,7 @@ const   express = require('express'),
         request = require('request'),
         path = require("path"),
         job     = require('./helper/cron');
-    require('dotenv').config()
+require('dotenv').config()
 
 
 app.use(express.json());
@@ -31,7 +31,7 @@ app.use(function (req, res, next) {
     next();
 });
 
-const mongoURL = 'mongodb://localhost:27018/streamy'
+const mongoURL = 'mongodb+srv://naman:samranaman@123@authprocluster.onzij.gcp.mongodb.net/streamy?retryWrites=true&w=majority'
 const options = {useNewUrlParser:true,useUnifiedTopology: true};
 
 

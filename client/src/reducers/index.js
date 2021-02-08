@@ -1,17 +1,11 @@
+import {authReducer} from './authreducer';
+import {streamReducer} from './streamreducer';
+import {combineReducers} from 'redux';
+import flashMessages from './flashreducer';
 
-const initialState = {user : null}
-
-const reducer = (state = initialState,action)=>{
-    if(action.type === "SET_USER"){
-        return {
-            user : action.payload.user
-        }
-    }
-    else if(action.type === "CLEAR_USER"){
-        return {
-            user : null
-        }
-    }
-    return state
-}
-export default reducer
+const rootReducer = combineReducers({
+    user : authReducer,
+    stream : streamReducer,
+    flash : flashMessages
+})
+export default rootReducer

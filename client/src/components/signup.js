@@ -1,23 +1,37 @@
-import React, {useState} from 'react'
+import React, {useState,useEffect} from 'react'
 import {connect} from 'react-redux'
 import {signup} from '../actions/auth'
 import fb from '../config/firebase'
 import {Link} from 'react-router-dom'
+import { addFlashMessage } from "../actions/flash";
 
-const SignUp = ({auth})=>{
+const SignUp = ({auth,user,history,addFlashMessage})=>{
     const [email,setEmail] = useState('');
     const [pass,setPass] = useState('');
 
+  useEffect(()=>{
+      if(user)
+          history.push('/')
+  },[user])
 
 function handleSignUp(e){
-    e.preventDefault();
-    fb.auth().createUserWithEmailAndPassword(email,pass)
-        .then(user=>{
-            auth(user);
-        })
-        .catch(err=>{
-            console.log(err);
-        })
+  e.preventDefault();
+  fb.auth()
+    .createUserWithEmailAndPassword(email, pass)
+    .then((user) => {
+      addFlashMessage({
+        type: "success",
+        text: "Signed up successfully",
+      });
+      auth(user);
+    })
+    .catch((err) => {
+      addFlashMessage({
+        type: "error",
+        text: `${err.message}`,
+      });
+      console.log(err);
+    });
     
 }
 
@@ -71,9 +85,10 @@ function handleSignUp(e){
 
 const mapStateToProps = (state)=>{
     return {
-        user : state.user
+        user : state.user.user
     }
 }
 export default connect(mapStateToProps,{
-    auth : signup
+    auth : signup,
+    addFlashMessage : addFlashMessage
 })(SignUp)

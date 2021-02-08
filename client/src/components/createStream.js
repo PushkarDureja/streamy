@@ -30,6 +30,7 @@ const CreateStream = (props)=>{
                 title : title,
                 description : description,
                 key : streamKey,
+                date : new Date().getTime()
             })
         
         
@@ -108,7 +109,7 @@ const CreateStream = (props)=>{
 
 const mapStateToProps = (state)=>{
     return {
-        user : state.user
+        user : state.user.user
     }
 }
 export default connect(mapStateToProps)(CreateStream)

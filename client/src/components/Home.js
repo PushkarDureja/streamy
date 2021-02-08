@@ -1,46 +1,32 @@
-import React ,{useEffect,useState} from 'react'
+import React from 'react'
 import {Link} from 'react-router-dom'
+import {connect} from 'react-redux'
+
 import './styles/home.scss'
 
-const Home = ()=>{
+const Home = ({stream})=>{
 
 
-const [live_streams,setStreams] = useState([]);
-
-useEffect (()=>{
-    fetch("http://35.247.156.160:8000/api/streams")
-        .then(data=>data.json())
-        .then(res=>{
-            let streams = res;
-                if (streams['live'] !== undefined) {
-                    getStreamsInfo(streams['live']);
-                }
-        })
-        .catch(err=>console.log(err))
-},[])
-
-function getStreamsInfo(streams) {
-    const list = JSON.stringify(streams);
-    fetch(`/api/stream/getstreams?list=${list}`)
-        .then(data=>data.json())
-        .then(res=>{
-            setStreams(res)
-        })
-}
 
 
-    let streams = live_streams.map((stream, index) => {
+
+    let streams = stream.map((stream, index) => {
         return (
             <div className="stream col-xs-12 col-sm-12 col-md-3 col-lg-4" key={index}>
                 <span className="live-label">LIVE</span>
                 <Link to={'/stream/' + stream.key}>
                     <div className="stream-thumbnail">
-                        <img src={'http://localhost:8000/images/' + stream.key + '.png'}/>
+                        <img src={'http://localhost:8000/images/' + stream.key + '.png'} onError = {(e)=>{
+                            e.target.onerror = null;
+                            e.target.src = "/no_image.png";
+                            e.target.style = "height : 30vh"
+                            }}/>
                         <span className="username" style = {{color : 'white'}}>                   
                             {stream.email}
                         </span>
                     </div>
                 </Link>
+                
 
                 
             </div>
@@ -57,4 +43,10 @@ function getStreamsInfo(streams) {
         </div>
     )
 }
-export default Home
+const mapStateToProps = (state)=>{
+    return {
+        stream : state.stream.stream
+    }
+}
+
+export default connect(mapStateToProps)(Home)
