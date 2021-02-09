@@ -4,10 +4,10 @@ const cmd = '/usr/bin/ffmpeg'
 const generateStreamThumbnail = (stream_key) => {
     const args = [
         '-y',
-        '-i', 'http://35.247.156.160:8000/live/'+stream_key+'.flv',
+        '-i', 'http://34.87.8.90:8000/live/'+stream_key+'.flv',
         '-ss', '00:00:01',
         '-vframes', '1',
-        '/home/pushkardureja/streamy/server/thumbnails/'+stream_key+'.png',
+        '/backend/thumbnails/'+stream_key+'.png',
     ];
 
     spawn(cmd, args, {

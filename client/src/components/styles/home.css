@@ -1,0 +1,29 @@
+.stream {
+    position: "absoulte";
+}
+.live-label{
+    z-index: 1;
+    position: absolute;
+        background-color: red;
+        color: white;
+        padding: 1px 5px;
+}
+.stream-thumbnail {
+    position: relative;
+}
+.stream-thumbnail img {
+    width: 100%;
+    position: relative;
+}
+.username {
+    position: absolute;
+        bottom: 0;
+        left :0;
+        background-color: black;
+}
+.stream a {
+    font-size: 18px;
+    color: white;
+    text-decoration: none;
+    padding: 2px 8px;
+  }

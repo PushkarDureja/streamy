@@ -2,7 +2,7 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
 
-import './styles/home.scss'
+import './styles/home.css'
 
 const Home = ({stream})=>{
 
@@ -13,9 +13,10 @@ const Home = ({stream})=>{
     let streams = stream.map((stream, index) => {
         return (
             <div className="stream col-xs-12 col-sm-12 col-md-3 col-lg-4" key={index}>
-                <span className="live-label">LIVE</span>
+                
                 <Link to={'/stream/' + stream.key}>
                     <div className="stream-thumbnail">
+                    <span className="live-label">LIVE</span>
                         <img src={'http://localhost:8000/images/' + stream.key + '.png'} onError = {(e)=>{
                             e.target.onerror = null;
                             e.target.src = "/no_image.png";
