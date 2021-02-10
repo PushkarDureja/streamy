@@ -14,7 +14,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "nodemon ./server/app.js",
+    "start": "nodemon server/app.js",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client  && npm run build --prefix client"
   },
   "repository": {
