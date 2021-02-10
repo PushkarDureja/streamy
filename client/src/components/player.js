@@ -8,7 +8,7 @@ class Player extends Component {
     return (
       <div style={{ display: "flex", flexDirection: "column" }} >
         <ReactFlvPlayer
-          url={`http://35.247.156.160:8000/live/${this.props.stream.key}.flv`}
+          url={`35.247.156.160:8000/live/${this.props.stream.key}.flv`}
           isLive={true}
           height="70vh"
           width="100vw"

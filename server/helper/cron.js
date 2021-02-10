@@ -4,7 +4,7 @@ const CronJob = require('cron').CronJob,
 
 const job = new CronJob('*/5 * * * * *', function () {
     request
-        .get('http://35.247.156.160:8000/api/streams', function (error, response, body) {
+        .get('35.247.156.160:8000/api/streams', function (error, response, body) {
             if(!error){
               
             let streams = JSON.parse(body);

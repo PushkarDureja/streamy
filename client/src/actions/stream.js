@@ -21,7 +21,7 @@ export const setStreamStatusFalse = ()=>{
 
 export const fetchStreams = ()=>{
     return dispatch => {
-    fetch("http://35.247.156.160:8000/api/streams")
+    fetch("35.247.156.160:8000/api/streams")
         .then(data=>data.json())
         .then(async(res)=>{
             console.log("fetching")
