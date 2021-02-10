@@ -40,13 +40,20 @@ dbconnect
     .then(()=>console.log("mongo initialised"))
     .catch((err)=>console.log(err))
 
-    app.use('/images',express.static(path.join('./thumbnails')))
-
+app.use('/images',express.static(path.join('./thumbnails')))
+job.start()
 
 app.use('/api/user',userRouter);
 app.use('/api/stream',streamRouter);
 app.use('/api/auth',authRouter)
+if(process.env.NODE_ENV === 'production') 
+{  
+    app.use(express.static(path.join(__dirname, '../client/build')));  
+    app.get('*', function(request, response) {
+        response.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
+      });
+}
 
-job.start()
+
 
 app.listen(8000,()=>console.log("server started"))

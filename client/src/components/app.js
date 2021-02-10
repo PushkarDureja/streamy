@@ -25,8 +25,8 @@ const App = (props)=>{
             
             <BrowserRouter>
                 <Navbar/>
-                <Switch>
                 {props.flash!=='' ? <FlashMessage/> : null}
+                <Switch>
                 <Route path = '/' exact component = {Home}/>
                 <Route path = '/login' exact component = {Login}/>
                 <ProtectedRoute path = '/live' exact component = {CreateStream}/>
