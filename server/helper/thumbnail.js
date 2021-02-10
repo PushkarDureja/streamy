@@ -1,5 +1,5 @@
 const spawn = require('child_process').spawn;
-const cmd = '/usr/bin/ffmpeg'
+const cmd = 'ffmpeg'
 
 const generateStreamThumbnail = (stream_key) => {
     const args = [
