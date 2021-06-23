@@ -4,3 +4,5 @@
 /client/node_modules
 /server/node_modules
 /server/docker-compose.yml
+node_modules
+.env
